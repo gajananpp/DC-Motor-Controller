@@ -1,4 +1,4 @@
-//LCD Functions Developed by electroSome
+
 
 //LCD Module Connections
 extern bit RS;                                                                   
