@@ -1,0 +1,307 @@
+C51 COMPILER V9.54   DCMCA                                                                 10/22/2015 18:32:39 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DCMCA
+OBJECT MODULE PLACED IN .\Objects\DCMCA.obj
+COMPILER INVOKED BY: D:\Developer_Programs\KEILC51\C51\BIN\C51.EXE DCMCA.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND P
+                    -RINT(.\Listings\DCMCA.lst) TABS(2) OBJECT(.\Objects\DCMCA.obj)
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #include<lcd.h>
+   3          
+   4          
+   5          //LEDs defined
+   6          sbit led_1 = P2^0;
+   7          sbit led_2 = P2^1;
+   8          sbit led_3 = P2^2;
+   9          sbit led_4 = P2^3;
+  10          //LCD control pins defined
+  11          sbit RS = P3^0;
+  12          sbit EN = P3^2;
+  13          sbit D0 = P0^0;
+  14          sbit D1 = P0^1;
+  15          sbit D2 = P0^2;
+  16          sbit D3 = P0^3;
+  17          sbit D4 = P0^4;
+  18          sbit D5 = P0^5;
+  19          sbit D6 = P0^6;
+  20          sbit D7 = P0^7;
+  21          //define motor control pins
+  22          sbit motor_pin_1 = P2^5;
+  23          sbit motor_pin_2 = P2^6;
+  24          
+  25          
+  26          
+  27          
+  28          unsigned int f = 1;
+  29          
+  30          void delay(int);
+  31          void kydelay(void);
+  32          
+  33          void main() {
+  34   1        int i,j;
+  35   1        P2=0x00;
+  36   1        P0=0x00;
+  37   1        P1=0xFF;
+  38   1        Lcd8_Init();
+  39   1        for(i=0;i<30000;i++) {
+  40   2          if(P1!=0xFF) {
+  41   3            goto up;
+  42   3          }
+  43   2        Lcd8_Clear();
+  44   2        Lcd8_Set_Cursor(1,4);
+  45   2        Lcd8_Write_String("DC Motor");
+  46   2        Lcd8_Set_Cursor(2,3);
+  47   2        Lcd8_Write_String("Controller");
+  48   2          for(i=0;i<15;i++)
+  49   2          {
+  50   3            delay(100);
+  51   3            Lcd8_Shift_Left();
+  52   3            if(P1!=0xFF) {
+  53   4              goto up;
+  54   4            }
+C51 COMPILER V9.54   DCMCA                                                                 10/22/2015 18:32:39 PAGE 2   
+
+  55   3          }
+  56   2        Lcd8_Clear();
+  57   2        Lcd8_Set_Cursor(1,15);
+  58   2        Lcd8_Write_String("DC Motor");
+  59   2        Lcd8_Set_Cursor(2,14);
+  60   2        Lcd8_Write_String("Controller");
+  61   2          for(i=0;i<12;i++)
+  62   2          {
+  63   3            delay(100);
+  64   3            Lcd8_Shift_Left();
+  65   3            if(P1!=0xFF) {
+  66   4              goto up;
+  67   4            }
+  68   3          }
+  69   2        }
+  70   1          
+  71   1        
+  72   1        up: while(1) {
+  73   2          if(P1==0xFE) {
+  74   3            kydelay();
+  75   3            Lcd8_Clear();
+  76   3            Lcd8_Set_Cursor(1,2);
+  77   3            Lcd8_Write_String("Motor Start");
+  78   3            for(i=0;i<15;i++)
+  79   3          {
+  80   4            delay(50);
+  81   4            Lcd8_Shift_Left();
+  82   4          }
+  83   3            Lcd8_Clear();
+  84   3            Lcd8_Set_Cursor(1,15);
+  85   3            Lcd8_Write_String("Motor Start");
+  86   3          for(i=0;i<12;i++)
+  87   3          {
+  88   4            delay(50);
+  89   4            Lcd8_Shift_Left();
+  90   4          }
+  91   3            led_1 = 1;
+  92   3            led_2 = 0;
+  93   3            led_3 = 1;
+  94   3            led_4 = 0;
+  95   3            motor_pin_1 = 1;
+  96   3            motor_pin_2 = 0;
+  97   3            f =1;
+  98   3          }
+  99   2          else if(P1==0xFD) {
+ 100   3            kydelay();
+ 101   3            Lcd8_Clear();
+ 102   3            Lcd8_Set_Cursor(1,3);
+ 103   3            Lcd8_Write_String("Motor Stop");
+ 104   3            for(i=0;i<15;i++)
+ 105   3          {
+ 106   4            delay(50);
+ 107   4            Lcd8_Shift_Left();
+ 108   4          }
+ 109   3            Lcd8_Clear();
+ 110   3            Lcd8_Set_Cursor(1,15);
+ 111   3            Lcd8_Write_String("Motor Stop");
+ 112   3          for(i=0;i<12;i++)
+ 113   3          {
+ 114   4            delay(50);
+ 115   4            Lcd8_Shift_Left();
+ 116   4          }
+C51 COMPILER V9.54   DCMCA                                                                 10/22/2015 18:32:39 PAGE 3   
+
+ 117   3            led_1 = 0;
+ 118   3            led_2 = 1;
+ 119   3            led_3 = 0;
+ 120   3            led_4 = 0;
+ 121   3            motor_pin_1 = 1;
+ 122   3            motor_pin_2 = 1;
+ 123   3            f =1;
+ 124   3          }
+ 125   2          else if(P1==0xFB) {
+ 126   3            kydelay();
+ 127   3            Lcd8_Clear();
+ 128   3            Lcd8_Set_Cursor(1,2);
+ 129   3            Lcd8_Write_String("Continuous Mode");
+ 130   3        
+ 131   3            for(i=0;i<15;i++)
+ 132   3          {
+ 133   4            delay(50);
+ 134   4            Lcd8_Shift_Left();
+ 135   4          }
+ 136   3            Lcd8_Clear();
+ 137   3            Lcd8_Set_Cursor(1,15);
+ 138   3            Lcd8_Write_String("Continuous Mode");
+ 139   3          for(i=0;i<14;i++)
+ 140   3          {
+ 141   4            delay(50);
+ 142   4            Lcd8_Shift_Left();
+ 143   4          }
+ 144   3            Lcd8_Clear();
+ 145   3            Lcd8_Set_Cursor(1,1);
+ 146   3            Lcd8_Write_String("Continuous Mode");
+ 147   3            Lcd8_Set_Cursor(2,5);
+ 148   3            Lcd8_Write_String("Default");
+ 149   3            
+ 150   3            led_1 = 1;
+ 151   3            led_2 = 0;
+ 152   3            led_3 = 1;
+ 153   3            led_4 = 0;
+ 154   3            motor_pin_1 = 1;
+ 155   3            motor_pin_2 = 0;
+ 156   3            f=1;
+ 157   3          }
+ 158   2          else if(P1==0xF7) {
+ 159   3            kydelay();
+ 160   3            Lcd8_Clear();
+ 161   3            Lcd8_Set_Cursor(1,2);
+ 162   3            Lcd8_Write_String("Reverse Mode");
+ 163   3            for(i=0;i<15;i++)
+ 164   3          {
+ 165   4            delay(50);
+ 166   4            Lcd8_Shift_Left();
+ 167   4          }
+ 168   3            Lcd8_Clear();
+ 169   3            Lcd8_Set_Cursor(1,15);
+ 170   3            Lcd8_Write_String("Reverse Mode");
+ 171   3          for(i=0;i<13;i++)
+ 172   3          {
+ 173   4            delay(50);
+ 174   4            Lcd8_Shift_Left();
+ 175   4          }
+ 176   3            led_1 = 1;
+ 177   3            led_2 = 0;
+ 178   3            led_3 = 0;
+C51 COMPILER V9.54   DCMCA                                                                 10/22/2015 18:32:39 PAGE 4   
+
+ 179   3            led_4 = 1;
+ 180   3            motor_pin_1 = 0;
+ 181   3            motor_pin_2 = 1;
+ 182   3            f=1;
+ 183   3          }
+ 184   2          else if(P1==0xEF) {
+ 185   3            kydelay();
+ 186   3            Lcd8_Clear();
+ 187   3            Lcd8_Set_Cursor(1,2);
+ 188   3            Lcd8_Write_String("Jogging Mode");
+ 189   3            for(i=0;i<15;i++)
+ 190   3          {
+ 191   4            delay(50);
+ 192   4            Lcd8_Shift_Left();
+ 193   4          }
+ 194   3            Lcd8_Clear();
+ 195   3            Lcd8_Set_Cursor(1,15);
+ 196   3            Lcd8_Write_String("Jogging Mode");
+ 197   3          for(i=0;i<13;i++)
+ 198   3          {
+ 199   4            delay(50);
+ 200   4            Lcd8_Shift_Left();
+ 201   4          }
+ 202   3            led_1 = 1;
+ 203   3            led_2 = 0;
+ 204   3            f=0;
+ 205   3            while(1) {
+ 206   4              
+ 207   4            //  motor_pin_1 = 1;
+ 208   4            //  motor_pin_2 = 1;
+ 209   4              
+ 210   4      //        for(i=0;i<3800;i++) {
+ 211   4      //          for(j=0;j<100;j++) {
+ 212   4      //            if(P1!=0xFF) {
+ 213   4      //              goto up;
+ 214   4      //            }
+ 215   4      //          }
+ 216   4      //        }
+ 217   4              led_3 = 1;
+ 218   4              led_4 = 0;
+ 219   4              motor_pin_1 = 1;
+ 220   4              motor_pin_2 = 0;
+ 221   4              for(i=0;i<5000;i++) {
+ 222   5                for(j=0;j<100;j++) {
+ 223   6                  if(P1!=0xFF) {
+ 224   7                    goto up;
+ 225   7                  }
+ 226   6                }
+ 227   5              }
+ 228   4      //        motor_pin_1 = 0;
+ 229   4      //        motor_pin_2 = 0;
+ 230   4      //        
+ 231   4      //        for(i=0;i<3800;i++) {
+ 232   4      //          for(j=0;j<100;j++) {
+ 233   4      //            if(P1!=0xFF) {
+ 234   4      //              goto up;
+ 235   4      //            }
+ 236   4      //          }
+ 237   4      //        }
+ 238   4              led_3 = 0;
+ 239   4              led_4 = 1;
+ 240   4              motor_pin_1 = 0;
+C51 COMPILER V9.54   DCMCA                                                                 10/22/2015 18:32:39 PAGE 5   
+
+ 241   4              motor_pin_2 = 1;
+ 242   4              for(i=0;i<5000;i++) {
+ 243   5                for(j=0;j<100;j++) {
+ 244   6                  if(P1!=0xFF) {
+ 245   7                    goto up;
+ 246   7                  }
+ 247   6                }
+ 248   5              }
+ 249   4            }
+ 250   3          
+ 251   3          }
+ 252   2          
+ 253   2        }
+ 254   1        
+ 255   1        
+ 256   1        
+ 257   1      }
+ 258          
+ 259          void kydelay() {
+ 260   1        int a,b;
+ 261   1        for(a=0;a<50;a++) {
+ 262   2          for(b=0;b<1000;b++) {
+ 263   3          }
+ 264   2        }
+ 265   1      }
+ 266          
+ 267          void delay(int k) {
+ 268   1        int i,j;
+ 269   1        for(i=0;i<k;i++){
+ 270   2          for(j=0;j<100;j++) {}
+ 271   2        }
+ 272   1      }
+ 273          
+*** WARNING C290 IN LINE 84 OF DCMCA.c: missing return value
+*** WARNING C290 IN LINE 176 OF DCMCA.c: missing return value
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1565    ----
+   CONSTANT SIZE    =     93    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2      19
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

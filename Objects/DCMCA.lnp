@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\DCMCA.obj" 
+TO ".\Objects\DCMCA" 
+PRINT(".\Listings\DCMCA.m51") CODE( 0X0000-0X0FFF )
